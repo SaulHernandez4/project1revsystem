@@ -43,24 +43,66 @@ void ReservationManager::loadReservations(const std::string& filename) {
 
 		Reservation reservation(std::stoi(reservationID), std::stoi(userID), name, resourceID, date);
 
-		//not done yet need to put reservations in linked list
+		Node* newNode = new Node;
+		newNode->reservation = reservation;
+		newNode->next = nullptr;
+
+		if (head == nullptr) {
+			head = newNode;
+		} else {
+			Node* current = head;
+			while (current->next != nullptr) {
+				current = current->next;
+			}
+			current->next = newNode;
+		}
+
 	}
 	file.close();
 }
 
 bool ReservationManager::createReservation(const Reservation& reservation) {
-	return false;
+	if (!validateReservation(reservation)) {
+		return false;
+	}
+	Node* newNode = new Node;
+	newNode->reservation = reservation;
+	newNode->next = nullptr;
+
+	if (head == nullptr) {
+		head = newNode;
+	}
+	else {
+		Node* current = head;
+		while (current->next != nullptr) {
+			current = current->next;
+		}
+		current->next = newNode;
+	}
+	return true;
 }
 
 bool ReservationManager::cancelReservation(int reservationID) {
-	return false;
+	return false; //NEED TO ADD
 }
 
 void ReservationManager::displayReservations() const {
+	Node* current = head;
+
+	while (current != nullptr) {
+		std::cout << "Reservation ID: " << current->reservation.getReservationID() << std::endl;
+		std::cout << "User ID: " << current->reservation.getUserID() << std::endl;
+		std::cout << "Name: " << current->reservation.getName() << std::endl;
+		std::cout << "Resource ID: " << current->reservation.getResourceID() << std::endl;
+		std::cout << "Date: " << current->reservation.getDate() << std::endl;
+		std::cout << "-----------------------------" << std::endl;
+		
+		current = current->next;
+	}
 }
 
 bool ReservationManager::validateReservation(const Reservation& reservation) const {
-	return false;
+	return true; //NEED TO ADD
 }
 
 ReservationManager::WaitingList*
