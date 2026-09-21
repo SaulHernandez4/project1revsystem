@@ -102,7 +102,39 @@ void ReservationManager::displayReservations() const {
 }
 
 bool ReservationManager::validateReservation(const Reservation& reservation) const {
-	return true; //NEED TO ADD
+	Node* current = head;
+	while (current != nullptr) {
+		if (current->reservation.getReservationID() == reservation.getReservationID()) {
+			std::cout << "Error: Reservation ID already exists.";
+			return false;
+		}
+	}
+	if (reservation.getUserID() <= 0) {
+		std::cout << "Error: Invalid user ID." << std::endl;
+		return false;
+	}
+	if (reservation.getName().empty()) {
+		std::cout<< "Error. Name cannot be empty." << std::endl;
+		return false;
+	}
+	if (reservation.getResourceID().empty()) {
+		std::cout << "Error: Resource ID cannot be empty." << std::endl;
+		return false;
+	}
+	if (reservation.getDate().empty()) {
+		std::cout << "Error: Date cannot be empty." << std::endl;
+		return false;
+	}
+	while (current!=nullptr) {
+		if (current.reservation.getResourceID() == reservation.getResourceID() && current->reservation.getDate() == reservation.getDate()) {
+			std::cout << "Error: Resource is already reserved on that date." << std::endl;
+			return false;
+		}
+
+		current = current->next;
+	}
+	return true;
+
 }
 
 ReservationManager::WaitingList*

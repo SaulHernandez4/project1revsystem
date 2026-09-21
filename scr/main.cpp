@@ -83,9 +83,6 @@ int main()
                 if (manager.createReservation(reservation)) {
                     std::cout << "Reservation created successfully!" << std::endl;
                 }
-
-
-                std::cout << "Create Reservation is not implemented yet." << std::endl;
                 break;
             }
             case 3:
