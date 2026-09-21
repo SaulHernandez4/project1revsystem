@@ -2,6 +2,8 @@
 #define RESERVATIONMANAGER_H
 
 #include <string>
+#include <vector>
+#include <queue>
 #include "Reservation.h"
 
 class ReservationManager {
@@ -13,6 +15,21 @@ private:
 
 	Node* head;
 
+	//WaitingLists & resources
+
+	struct WaitingStudent{
+		int userID;
+		std::string name;
+		std::string date;
+	};
+
+	struct WaitingList {
+		std::string resourceID;
+		std::queue<WaitingStudent> students;
+	};
+
+	std::vector<WaitingList> waitingLists;
+	WaitingList* findWaitingList(std::string resourceID);
 public:
 	ReservationManager();
 	~ReservationManager();
@@ -24,6 +41,11 @@ public:
 
 	void displayReservations() const;
 	bool validateReservation(const Reservation& reservation) const;
+
+	void addToWaitingList(std::string resourceID, int userID, std::string name, std::string date);
+	void processWaitingList(std::string resourceID);
+	void displayWaitingList();
+	
 };
 
 
