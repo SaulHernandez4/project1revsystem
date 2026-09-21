@@ -43,22 +43,147 @@ void ReservationManager::loadReservations(const std::string& filename) {
 
 		Reservation reservation(std::stoi(reservationID), std::stoi(userID), name, resourceID, date);
 
-		//not done yet need to put reservations in linked list
+		Node* newNode = new Node;
+		newNode->reservation = reservation;
+		newNode->next = nullptr;
+
+		if (head == nullptr) {
+			head = newNode;
+		} else {
+			Node* current = head;
+			while (current->next != nullptr) {
+				current = current->next;
+			}
+			current->next = newNode;
+		}
+
 	}
 	file.close();
 }
 
 bool ReservationManager::createReservation(const Reservation& reservation) {
-	return false;
+	if (!validateReservation(reservation)) {
+		return false;
+	}
+	Node* newNode = new Node;
+	newNode->reservation = reservation;
+	newNode->next = nullptr;
+
+	if (head == nullptr) {
+		head = newNode;
+	}
+	else {
+		Node* current = head;
+		while (current->next != nullptr) {
+			current = current->next;
+		}
+		current->next = newNode;
+	}
+	return true;
 }
 
 bool ReservationManager::cancelReservation(int reservationID) {
-	return false;
+	return false; //NEED TO ADD
 }
 
 void ReservationManager::displayReservations() const {
+	Node* current = head;
+
+	while (current != nullptr) {
+		std::cout << "Reservation ID: " << current->reservation.getReservationID() << std::endl;
+		std::cout << "User ID: " << current->reservation.getUserID() << std::endl;
+		std::cout << "Name: " << current->reservation.getName() << std::endl;
+		std::cout << "Resource ID: " << current->reservation.getResourceID() << std::endl;
+		std::cout << "Date: " << current->reservation.getDate() << std::endl;
+		std::cout << "-----------------------------" << std::endl;
+		
+		current = current->next;
+	}
 }
 
 bool ReservationManager::validateReservation(const Reservation& reservation) const {
-	return false;
+	return true; //NEED TO ADD
+}
+
+ReservationManager::WaitingList*
+ReservationManager::findWaitingList(std::string resourceID) {
+	for (int i = 0; i < waitingLists.size(); i++) {
+		if (waitingLists[i].resourceID == resourceID) {
+			return &waitingLists[i];
+		}
+	} 
+	return nullptr;
+}
+
+void ReservationManager::addToWaitingList(std::string resourceID, int userID, std::string name, std::string date) {
+	WaitingList* list = findWaitingList(resourceID);
+
+	if (list == nullptr) {
+		std::cout << "Error: Waiting list not found." << std::endl;
+		return;
+	}
+
+	WaitingStudent student;
+
+	student.userID = userID;
+	student.name = name;
+	student.date = date;
+
+	list -> students.push(student);
+
+	std::cout << "Student added to waitlist." << std::endl;
+	std::cout << "Current position: " << list->students.size() << std::endl;
+}
+
+void ReservationManager::processWaitingList(std::string resourceID) {
+	//WIP
+
+	WaitingList* list = findWaitingList(resourceID);
+
+	if (list == nullptr) {
+		return;
+	}
+	if (list -> students.empty()) {
+		return;
+	}
+
+	//resource* resource
+	//if nullptr, return
+
+	WaitingStudent student = list -> students.front();
+	list -> students.pop();
+
+	int newReservationID = 1;
+
+	//reservations
+
+}
+
+void ReservationManager::displayWaitingList() {
+	std::cout << std::endl;
+	std::cout << "===== Waiting List =====";
+	std::cout << std::endl;
+
+	for (int i = 0; i < waitingLists.size(); i++) {
+		std::cout << std::endl << "Resource: " << waitingLists[i].resourceID << std::endl;
+
+		if (waitingLists[i].students.empty()) {
+			std::cout << "Waitlist: Empty" << std::endl;
+
+			continue;
+		}
+
+		std::queue<WaitingStudent> temp = waitingLists[i].students;
+
+		int position = 1;
+
+		while (!temp.empty()) {
+			WaitingStudent student = temp.front();
+			temp.pop();
+
+			std::cout << position << ". " << student.name << " (Student ID: " << student.userID << ")" << std::endl;
+
+			position++;
+		}
+	}
 }

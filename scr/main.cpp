@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include "Resource.h"
+#include "ReservationManager.h"
 
 std::string findResourcesFile()
 {
@@ -25,6 +26,9 @@ std::string findResourcesFile()
 
 int main()
 {
+    ReservationManager manager;
+    manager.loadReservations("data/reservations.txt");
+
     std::vector<Resource> resources = loadResources(findResourcesFile());
     int choice = 0;
 
@@ -60,8 +64,30 @@ int main()
                 displayAvailability(resources);
                 break;
             case 2:
+            {
+                int reservationID = manager.getReservationID(); 
+                int userID;
+                std::string name;
+                std::string resourceID;
+                std::string date;
+                std::cout << "Enter user ID: ";
+                std::cin >> userID;
+                std::cout << "Enter Name: ";
+                std::getline(std::cin, name);
+                std::cout << "Enter Resource ID: ";
+                std::cin >> resourceID;
+                std::cout << "Enter Date (MM/DD/YYYY): ";
+                std::cin >> date;
+
+                Reservation reservation(reservationID, userID, name, resourceID, date);
+                if (manager.createReservation(reservation)) {
+                    std::cout << "Reservation created successfully!" << std::endl;
+                }
+
+
                 std::cout << "Create Reservation is not implemented yet." << std::endl;
                 break;
+            }
             case 3:
                 std::cout << "Cancel Reservation is not implemented yet." << std::endl;
                 break;
@@ -71,7 +97,8 @@ int main()
             case 5:
                 std::cout << "Undo Cancellation is not implemented yet." << std::endl;
                 break;
-            case 6:
+            case 6://using to test looking at reservation list
+                manager.displayReservations();
                 std::cout << "Search Reservations is not implemented yet." << std::endl;
                 break;
             case 7:
