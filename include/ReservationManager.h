@@ -2,14 +2,13 @@
 #define RESERVATIONMANAGER_H
 
 #include <string>
-#include <vector>
 #include "Reservation.h"
 
 class ReservationManager {
 private:
 	struct Node {
 		Reservation reservation;
-		node* next;
+		Node* next;
 	};
 
 	Node* head;
@@ -25,7 +24,6 @@ public:
 
 	void displayReservations() const;
 	bool validateReservation(const Reservation& reservation) const;
-	
 };
 
 
