@@ -122,7 +122,7 @@ void ReservationManager::displayReservation(const Reservation& reservation) cons
 
 void ReservationManager::displayReservations() const {
 	Node* current = head;
-
+	std::cout << "-----------------------------" << std::endl;
 	while (current != nullptr) {
 		displayReservation(current->reservation);
 		current = current->next;
@@ -284,3 +284,17 @@ void ReservationManager::undoCancelledReservation() {
 }
 
 
+void ReservationManager::displayCancelledReservations() const {
+	if (cancelledReservations.empty()) {
+		std::cout << "No cancelled reservations." << std::endl;
+		return;
+	}
+
+	std::stack<Reservation> temp = cancelledReservations;
+	std::cout << "-----------------------------" << std::endl;
+	while (!temp.empty()) {
+		displayReservation(temp.top());
+		temp.pop();
+	}
+	return;
+}

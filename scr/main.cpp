@@ -32,19 +32,20 @@ int main()
     std::vector<Resource> resources = loadResources(findResourcesFile());
     int choice = 0;
 
-    while (choice != 9)
+    while (choice != 10)
     {
         std::cout << std::endl;
         std::cout << "===== Campus Resource Reservation System =====" << std::endl;
         std::cout << "1. View Resources" << std::endl;
         std::cout << "2. Create Reservation" << std::endl;
         std::cout << "3. Cancel Reservation" << std::endl;
-        std::cout << "4. View Waiting Lists" << std::endl;
+        std::cout << "4. View Waiting Lists" << std::endl; //not done
         std::cout << "5. Undo Cancellation" << std::endl;
         std::cout << "6. Show Reservations" << std::endl;
         std::cout << "7. Sort Resources" << std::endl;
         std::cout << "8. Generate Report" << std::endl;
-        std::cout << "9. Exit" << std::endl;
+        std::cout << "9. Show Cancellation History" << std::endl;
+        std::cout << "10. Exit" << std::endl;
         std::cout << "Enter Choice: ";
 
         if (!(std::cin >> choice))
@@ -111,6 +112,9 @@ int main()
                 std::cout << "Generate Report is not implemented yet." << std::endl;
                 break;
             case 9:
+                manager.displayCancelledReservations();
+                break;
+            case 10:
                 std::cout << "Exiting program." << std::endl;
                 break;
             default:

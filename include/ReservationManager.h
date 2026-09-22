@@ -53,6 +53,7 @@ public:
 	int getReservationID() const;
 	
 	void undoCancelledReservation();
+	void displayCancelledReservations() const;
 };
 
 
