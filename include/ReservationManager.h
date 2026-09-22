@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <stack>
 #include "Reservation.h"
 
 class ReservationManager {
@@ -14,6 +15,8 @@ private:
 	};
 
 	Node* head;
+	Node* tail;
+	std::stack<Reservation>  cancelledReservations;
 
 	//WaitingLists & resources
 
@@ -45,7 +48,10 @@ public:
 	void addToWaitingList(std::string resourceID, int userID, std::string name, std::string date);
 	void processWaitingList(std::string resourceID);
 	void displayWaitingList();
+
+	int getReservationID() const;
 	
+	void undoCancelledReservation(int reservationID);
 };
 
 

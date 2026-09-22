@@ -4,9 +4,12 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+#include <stack>
 
 ReservationManager::ReservationManager() {
 	head = nullptr;
+	tail = nullptr;
+
 }
 
 ReservationManager::~ReservationManager() {
@@ -49,12 +52,10 @@ void ReservationManager::loadReservations(const std::string& filename) {
 
 		if (head == nullptr) {
 			head = newNode;
+			tail = newNode;
 		} else {
-			Node* current = head;
-			while (current->next != nullptr) {
-				current = current->next;
-			}
-			current->next = newNode;
+			tail->next = newNode;
+			tail = newNode;
 		}
 
 	}
@@ -71,19 +72,43 @@ bool ReservationManager::createReservation(const Reservation& reservation) {
 
 	if (head == nullptr) {
 		head = newNode;
+		tail = newNode;
 	}
 	else {
-		Node* current = head;
-		while (current->next != nullptr) {
-			current = current->next;
-		}
-		current->next = newNode;
+		tail->next = newNode;
+		tail = newNode;
 	}
 	return true;
 }
 
 bool ReservationManager::cancelReservation(int reservationID) {
-	return false; //NEED TO ADD
+	Node* current = head;
+	Node* previous = nullptr;
+
+	while (current != nullptr) {
+		if (current->reservation.getReservationID() == reservationID) {
+
+			cancelledReservations.push(current->reservation);
+
+			if (previous == nullptr) {
+				head = current->next;
+			} else {
+				previous->next = current->next;
+			}
+
+			if (current == tail) {
+				tail = previous;
+			}
+
+			delete current;
+			std::cout << "Reservation cancelled successfully." << std::endl;
+			return true;
+		}
+
+		previous = current;
+		current = current->next;
+	}
+	return false;
 }
 
 void ReservationManager::displayReservations() const {
@@ -107,7 +132,9 @@ bool ReservationManager::validateReservation(const Reservation& reservation) con
 		if (current->reservation.getReservationID() == reservation.getReservationID()) {
 			std::cout << "Error: Reservation ID already exists.";
 			return false;
+			
 		}
+		current = current->next;
 	}
 	if (reservation.getUserID() <= 0) {
 		std::cout << "Error: Invalid user ID." << std::endl;
@@ -122,11 +149,11 @@ bool ReservationManager::validateReservation(const Reservation& reservation) con
 		return false;
 	}
 	if (reservation.getDate().empty()) {
-		std::cout << "Error: Date cannot be empty." << std::endl;
+		std::cout << "Error: Date cannot be empty." << std::endl;	
 		return false;
 	}
 	while (current!=nullptr) {
-		if (current.reservation.getResourceID() == reservation.getResourceID() && current->reservation.getDate() == reservation.getDate()) {
+		if (current->reservation.getResourceID() == reservation.getResourceID() && current->reservation.getDate() == reservation.getDate()) {
 			std::cout << "Error: Resource is already reserved on that date." << std::endl;
 			return false;
 		}
@@ -219,3 +246,18 @@ void ReservationManager::displayWaitingList() {
 		}
 	}
 }
+
+int ReservationManager::getReservationID() const {
+	if (tail == nullptr) {
+		return 301;
+	}
+
+	return tail->reservation.getReservationID() + 1;
+}
+
+void ReservationManager::undoCancelledReservation(int ID) {
+
+
+}
+
+

@@ -65,14 +65,17 @@ int main()
                 break;
             case 2:
             {
-                int reservationID = manager.getReservationID(); 
+                int reservationID = manager.getReservationID();
                 int userID;
                 std::string name;
                 std::string resourceID;
                 std::string date;
+                //std::cout << "Enter Reservation ID: ";
+                //std::cin >> reservationID;
                 std::cout << "Enter user ID: ";
                 std::cin >> userID;
                 std::cout << "Enter Name: ";
+                std::cin.ignore();
                 std::getline(std::cin, name);
                 std::cout << "Enter Resource ID: ";
                 std::cin >> resourceID;
@@ -86,7 +89,13 @@ int main()
                 break;
             }
             case 3:
-                std::cout << "Cancel Reservation is not implemented yet." << std::endl;
+                int reservationID;
+                std::cout << "Enter reservation ID (Enter -1 to go back): ";
+                std::cin >> reservationID;
+                if (reservationID == -1) break;
+                if (!manager.cancelReservation(reservationID)) {
+                    std::cout << "No such reservation found." << std::endl;
+                }
                 break;
             case 4:
                 std::cout << "View Waiting Lists is not implemented yet." << std::endl;
