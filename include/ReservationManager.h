@@ -42,6 +42,7 @@ public:
 	bool createReservation(const Reservation& reservation);
 	bool cancelReservation(int reservationID);
 
+	void displayReservation(const Reservation& reservation) const;
 	void displayReservations() const;
 	bool validateReservation(const Reservation& reservation) const;
 
@@ -51,7 +52,7 @@ public:
 
 	int getReservationID() const;
 	
-	void undoCancelledReservation(int reservationID);
+	void undoCancelledReservation();
 };
 
 

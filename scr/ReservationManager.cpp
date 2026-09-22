@@ -111,17 +111,20 @@ bool ReservationManager::cancelReservation(int reservationID) {
 	return false;
 }
 
+void ReservationManager::displayReservation(const Reservation& reservation) const {
+	std::cout << "Reservation ID: " << reservation.getReservationID() << std::endl;
+	std::cout << "User ID: " << reservation.getUserID() << std::endl;
+	std::cout << "Name: " << reservation.getName() << std::endl;
+	std::cout << "Resource ID: " << reservation.getResourceID() << std::endl;
+	std::cout << "Date: " << reservation.getDate() << std::endl;
+	std::cout << "-----------------------------" << std::endl;
+}
+
 void ReservationManager::displayReservations() const {
 	Node* current = head;
 
 	while (current != nullptr) {
-		std::cout << "Reservation ID: " << current->reservation.getReservationID() << std::endl;
-		std::cout << "User ID: " << current->reservation.getUserID() << std::endl;
-		std::cout << "Name: " << current->reservation.getName() << std::endl;
-		std::cout << "Resource ID: " << current->reservation.getResourceID() << std::endl;
-		std::cout << "Date: " << current->reservation.getDate() << std::endl;
-		std::cout << "-----------------------------" << std::endl;
-		
+		displayReservation(current->reservation);
 		current = current->next;
 	}
 }
@@ -255,9 +258,29 @@ int ReservationManager::getReservationID() const {
 	return tail->reservation.getReservationID() + 1;
 }
 
-void ReservationManager::undoCancelledReservation(int ID) {
+void ReservationManager::undoCancelledReservation() {
+	if (cancelledReservations.empty()) {
+		std::cout << "No cancelled reservations to undo." << std::endl;
+		return;
+	}
 
+	Reservation reservation = cancelledReservations.top();
+	cancelledReservations.pop();
 
+	Node* newNode = new Node;
+	newNode->reservation = reservation;
+	newNode->next = nullptr;
+
+	if (head == nullptr) {
+		head = newNode;
+		tail = newNode;
+	}
+	else {
+		tail->next = newNode;
+		tail = newNode;
+	}
+	std::cout << "Reservation " << reservation.getReservationID() << " has been restored." << std::endl;
+	return;
 }
 
 

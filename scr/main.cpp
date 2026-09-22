@@ -41,7 +41,7 @@ int main()
         std::cout << "3. Cancel Reservation" << std::endl;
         std::cout << "4. View Waiting Lists" << std::endl;
         std::cout << "5. Undo Cancellation" << std::endl;
-        std::cout << "6. Search Reservations" << std::endl;
+        std::cout << "6. Show Reservations" << std::endl;
         std::cout << "7. Sort Resources" << std::endl;
         std::cout << "8. Generate Report" << std::endl;
         std::cout << "9. Exit" << std::endl;
@@ -70,8 +70,6 @@ int main()
                 std::string name;
                 std::string resourceID;
                 std::string date;
-                //std::cout << "Enter Reservation ID: ";
-                //std::cin >> reservationID;
                 std::cout << "Enter user ID: ";
                 std::cin >> userID;
                 std::cout << "Enter Name: ";
@@ -101,11 +99,10 @@ int main()
                 std::cout << "View Waiting Lists is not implemented yet." << std::endl;
                 break;
             case 5:
-                std::cout << "Undo Cancellation is not implemented yet." << std::endl;
+                manager.undoCancelledReservation();
                 break;
-            case 6://using to test looking at reservation list
+            case 6:
                 manager.displayReservations();
-                std::cout << "Search Reservations is not implemented yet." << std::endl;
                 break;
             case 7:
                 std::cout << "Sort Resources is not implemented yet." << std::endl;
