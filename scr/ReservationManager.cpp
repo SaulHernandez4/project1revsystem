@@ -63,6 +63,24 @@ void ReservationManager::loadReservations(const std::string& filename) {
 }
 
 bool ReservationManager::createReservation(const Reservation& reservation) {
+
+	//waiting list integration
+	Node* current = head;
+
+	while (current != nullptr) {
+		if (current -> reservation.getReservationID() == reservation.getReservationID() && current-> reservation.getDate() == reservation.getDate()) {
+			std::cout << "Resource is already reserved on that date." << std::endl;
+
+			addToWaitingList(reservation.getResourceID(),reservation.getUserID(),reservation.getName(),reservation.getDate());
+
+			return false;
+		}
+		
+		current = current -> next;
+	}
+
+	//waiting list end
+
 	if (!validateReservation(reservation)) {
 		return false;
 	}
@@ -100,8 +118,14 @@ bool ReservationManager::cancelReservation(int reservationID) {
 				tail = previous;
 			}
 
+			//Waiting list cancellation
+			std::string resourceID = current -> reservation.getResourceID();
+
 			delete current;
+
 			std::cout << "Reservation cancelled successfully." << std::endl;
+			processWaitingList(resourceID);
+
 			return true;
 		}
 
@@ -181,8 +205,10 @@ void ReservationManager::addToWaitingList(std::string resourceID, int userID, st
 	WaitingList* list = findWaitingList(resourceID);
 
 	if (list == nullptr) {
-		std::cout << "Error: Waiting list not found." << std::endl;
-		return;
+		WaitingList newList;
+		newList.resourceID = resourceID;
+		waitingLists.push_back(newList);
+		list = &waitingLists.back();
 	}
 
 	WaitingStudent student;
@@ -202,22 +228,31 @@ void ReservationManager::processWaitingList(std::string resourceID) {
 
 	WaitingList* list = findWaitingList(resourceID);
 
-	if (list == nullptr) {
+	if (list == nullptr || list->students.empty()) {
 		return;
 	}
-	if (list -> students.empty()) {
-		return;
+	
+	WaitingStudent student = list->students.front();
+
+	Node* current = head;
+
+	while (current != nullptr) {
+		if (current -> reservation.getResourceID() == resourceID && current -> reservation.getDate() == student.date) {
+			return;
+		}
+		current = current -> next;
 	}
 
-	//resource* resource
-	//if nullptr, return
+	int newReservationID = getReservationID();
 
-	WaitingStudent student = list -> students.front();
-	list -> students.pop();
-
-	int newReservationID = 1;
-
-	//reservations
+	Reservation reservation (newReservationID, student.userID, student.name, resourceID, student.date);
+	
+	if (createReservation(reservation)) {
+		list -> students.pop();
+		std::cout << "Waiting-list reservation created successfully" << std::endl;
+		std::cout << "Reservation ID: " << newReservationID << std::endl;
+		std::cout << "Student: " << student.name << std::endl;
+	}
 
 }
 
@@ -226,24 +261,28 @@ void ReservationManager::displayWaitingList() {
 	std::cout << "===== Waiting List =====";
 	std::cout << std::endl;
 
-	for (int i = 0; i < waitingLists.size(); i++) {
+	if (waitingLists.empty()) {
+		std::cout << "No waiting lists exist." << std::endl;
+		return;
+	}
+
+	for (size_t i = 0; i < waitingLists.size(); i++) {
 		std::cout << std::endl << "Resource: " << waitingLists[i].resourceID << std::endl;
+		std::cout << "Students waiting: " << waitingLists[i].students.size() << std::endl;
 
 		if (waitingLists[i].students.empty()) {
-			std::cout << "Waitlist: Empty" << std::endl;
-
+			std::cout << "Waiting list: Empty" << std::endl;
 			continue;
 		}
 
 		std::queue<WaitingStudent> temp = waitingLists[i].students;
-
 		int position = 1;
 
 		while (!temp.empty()) {
 			WaitingStudent student = temp.front();
 			temp.pop();
 
-			std::cout << position << ". " << student.name << " (Student ID: " << student.userID << ")" << std::endl;
+			std::cout << position << ". " << student.name << " (Student ID: " << student.userID << ") - Date: " << student.date << std::endl;
 
 			position++;
 		}

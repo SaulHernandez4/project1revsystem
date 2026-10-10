@@ -97,7 +97,7 @@ int main()
                 }
                 break;
             case 4:
-                std::cout << "View Waiting Lists is not implemented yet." << std::endl;
+                manager.displayWaitingList();
                 break;
             case 5:
                 manager.undoCancelledReservation();
