@@ -6,6 +6,7 @@
 #include <queue>
 #include <stack>
 #include "Reservation.h"
+#include "Resource.h"
 
 class ReservationManager {
 private:
@@ -17,6 +18,7 @@ private:
 	Node* head;
 	Node* tail;
 	std::stack<Reservation>  cancelledReservations;
+	int nextReservationID;
 
 	//WaitingLists & resources
 
@@ -39,20 +41,20 @@ public:
 
 	void loadReservations(const std::string& filename);
 
-	bool createReservation(const Reservation& reservation);
-	bool cancelReservation(int reservationID);
+	bool createReservation(const Reservation& reservation, std::vector<Resource>& resources);
+	bool cancelReservation(int reservationID, std::vector<Resource>& resources);
 
 	void displayReservation(const Reservation& reservation) const;
 	void displayReservations() const;
 	bool validateReservation(const Reservation& reservation) const;
 
 	void addToWaitingList(std::string resourceID, int userID, std::string name, std::string date);
-	void processWaitingList(std::string resourceID);
+	void processWaitingList(std::string resourceID, std::vector<Resource>& resources);
 	void displayWaitingList();
 
 	int getReservationID() const;
 	
-	void undoCancelledReservation();
+	void undoCancelledReservation(std::vector<Resource>& resources);
 	void displayCancelledReservations() const;
 };
 

@@ -39,7 +39,7 @@ int main()
         std::cout << "1. View Resources" << std::endl;
         std::cout << "2. Create Reservation" << std::endl;
         std::cout << "3. Cancel Reservation" << std::endl;
-        std::cout << "4. View Waiting Lists" << std::endl; //not done
+        std::cout << "4. View Waiting Lists" << std::endl;
         std::cout << "5. Undo Cancellation" << std::endl;
         std::cout << "6. Show Reservations" << std::endl;
         std::cout << "7. Sort Resources" << std::endl;
@@ -82,7 +82,7 @@ int main()
                 std::cin >> date;
 
                 Reservation reservation(reservationID, userID, name, resourceID, date);
-                if (manager.createReservation(reservation)) {
+                if (manager.createReservation(reservation, resources)) {
                     std::cout << "Reservation created successfully!" << std::endl;
                 }
                 break;
@@ -92,7 +92,7 @@ int main()
                 std::cout << "Enter reservation ID (Enter -1 to go back): ";
                 std::cin >> reservationID;
                 if (reservationID == -1) break;
-                if (!manager.cancelReservation(reservationID)) {
+                if (!manager.cancelReservation(reservationID, resources)) {
                     std::cout << "No such reservation found." << std::endl;
                 }
                 break;
@@ -100,7 +100,7 @@ int main()
                 manager.displayWaitingList();
                 break;
             case 5:
-                manager.undoCancelledReservation();
+                manager.undoCancelledReservation(resources);
                 break;
             case 6:
                 manager.displayReservations();
