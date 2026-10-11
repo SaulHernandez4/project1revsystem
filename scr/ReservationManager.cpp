@@ -150,15 +150,25 @@ bool ReservationManager::cancelReservation(int reservationID, std::vector<Resour
 
 			delete current;
 
-			for (Resource& resource : resources) {
-				if (resource.getId() == resourceID) {
-					resource.setStatus("Available");
+			bool stillBooked = false;
+			for (Node* n = head;n != nullptr;n = n->next) {
+				if (n->reservation.getResourceID() == resourceID) {
+					stillBooked = true;
 					break;
 				}
 			}
 
 			std::cout << "Reservation cancelled successfully." << std::endl;
-			processWaitingList(resourceID, resources);
+
+			if (!stillBooked) {
+				for (Resource& resource : resources) {
+					if (resource.getId() == resourceID) {
+						resource.setStatus("Available");
+						break;
+					}
+				}
+				processWaitingList(resourceID, resources);
+			}
 
 			return true;
 		}
@@ -336,7 +346,6 @@ void ReservationManager::undoCancelledReservation(std::vector<Resource>& resourc
 
 	for (Resource& resource : resources) {
 		if (resource.getId() == reservation.getResourceID()) {
-			f
 			if (resource.getStatus() == "Unavailable") {
 				std::cout << "Cannot undo: resource is currently reserved." << std::endl;
 				return;

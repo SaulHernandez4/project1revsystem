@@ -80,6 +80,7 @@ int main()
                 std::cin >> resourceID;
                 std::cout << "Enter Date (MM/DD/YYYY): ";
                 std::cin >> date;
+                std::cout << std::endl;
 
                 Reservation reservation(reservationID, userID, name, resourceID, date);
                 if (manager.createReservation(reservation, resources)) {
