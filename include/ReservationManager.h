@@ -56,6 +56,7 @@ public:
 	
 	void undoCancelledReservation(std::vector<Resource>& resources);
 	void displayCancelledReservations() const;
+	void generateReport(const std::vector<Resource>& resources) const;
 };
 
 
