@@ -229,7 +229,7 @@ bool ReservationManager::validateReservation(const Reservation& reservation) con
 
 ReservationManager::WaitingList*
 ReservationManager::findWaitingList(std::string resourceID) {
-	for (int i = 0; i < waitingLists.size(); i++) {
+	for (size_t i = 0; i < waitingLists.size(); i++) {
 		if (waitingLists[i].resourceID == resourceID) {
 			return &waitingLists[i];
 		}
@@ -268,16 +268,22 @@ void ReservationManager::processWaitingList(std::string resourceID, std::vector<
 		return;
 	}
 	
-	WaitingStudent student = list->students.front();
+	bool available = false;
 
-	//Node* current = head;
+	for (Resource& resource : resources) {
+		if (resource.getId() == resourceID) {
+			if (resource.getStatus() == "Available") {
+				available = true;
+			}
+			break;
+		}
+	}
+	
+	if(!available) {
+		return;
+	}
 
-	//while (current != nullptr) {
-	//	if (current -> reservation.getResourceID() == resourceID && current -> reservation.getDate() == student.date) {
-	//		return;
-	//	}
-	//	current = current -> next;
-	//}
+	WaitingStudent student = list -> students.front();
 
 	int newReservationID = getReservationID();
 
@@ -388,4 +394,97 @@ void ReservationManager::displayCancelledReservations() const {
 		temp.pop();
 	}
 	return;
+}
+
+void ReservationManager::generateReport(const std::vector<Resource>& resources) const {
+	std::cout << std::endl << "========================================" << std::endl;
+	std::cout << "       CAMPUS SYSTEM REPORT" << std::endl;
+	std::cout << "========================================" << std::endl;
+
+	int totalReservations = 0;
+
+	Node* current = head;
+
+	while (current != nullptr) {
+		totalReservations++;
+		current = current -> next;
+	}
+
+	std::cout << std::endl << "Total Active Reservations: " << totalReservations << std::endl;
+	std::cout << std::endl << "--- Active Reservations ---" << std::endl;
+
+	if (head == nullptr) {
+		std::cout << "No active reservations." << std::endl;
+	}
+	else {
+		displayReservations();
+	}
+	
+	std::cout << std::endl << "--- Resource Utilization ---" << std::endl;
+
+	int highestDemand = 0;
+	std::string mostRequestedResource = "None";
+	int totalWaiting = 0;
+
+	for (const Resource& resource : resources) {
+		int reservationCount = 0;
+		current = head;
+
+		while (current != nullptr) {
+			if (current -> reservation.getResourceID() == resource.getId()) {
+				reservationCount++;
+			}
+			current = current -> next;
+		}
+
+		int waitingCount = 0;
+
+		for (const WaitingList& list : waitingLists) {
+			if (list.resourceID == resource.getId()) {
+				waitingCount = static_cast<int>(list.students.size());
+				break;
+			}
+		}
+
+		int demand = reservationCount + waitingCount;
+		totalWaiting += waitingCount;
+
+		std::cout << std::endl << "Resource: " << resource.getName() << " (" << resource.getId() << ")" << std::endl;
+		std::cout << "Status: " << resource.getStatus() << std::endl;
+		std::cout << "Active Reservations: " << reservationCount << std::endl;
+		std::cout << "Students Waiting: " << waitingCount << std::endl;
+
+		if (demand > highestDemand) {
+			highestDemand = demand;
+			mostRequestedResource = resource.getName();
+		}
+	}
+
+	std::cout << std::endl << "--- Most Requested Resource ---" << std::endl;
+
+	if (highestDemand == 0) {
+		std::cout << "No current resource demand." << std::endl;
+	}
+	else {
+		std::cout << "Resource: " << mostRequestedResource << std::endl;
+		std::cout << "Current Demand: " << highestDemand << std::endl;
+	}
+
+	std::cout << std::endl << "--- Waiting List Statistics ---" << std::endl;
+
+	if (waitingLists.empty()) {
+		std::cout << "No waiting lists exist." << std::endl;
+	}
+	else {
+		for (const WaitingList& list : waitingLists) {
+			std::cout << "Resource: " << list.resourceID << " | Students Waiting: " << list.students.size() << std::endl;
+		}
+	}
+
+	std::cout << "Total Students Waiting: " << totalWaiting << std::endl;
+
+	std::cout << std::endl << "========================================" << std::endl;
+	std::cout << "          END OF REPORT" << std::endl;
+	std::cout << std::endl << "========================================" << std::endl;
+
 }

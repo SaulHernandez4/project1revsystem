@@ -110,7 +110,7 @@ int main()
                 std::cout << "Sort Resources is not implemented yet." << std::endl;
                 break;
             case 8:
-                std::cout << "Generate Report is not implemented yet." << std::endl;
+                manager.generateReport(resources);
                 break;
             case 9:
                 manager.displayCancelledReservations();
