@@ -23,7 +23,7 @@ TEAM / AUTHORS
 Course:      CSCE 2110
 Instructor:  Mokarram
 Semester:    Fall 2026
-Team:        Saul Hernandez, 
+Team:        Saul Hernandez, Cooper Gounah, Colin Segovia
 
 FEATURES
 --------------------------------------------------------------------------------
