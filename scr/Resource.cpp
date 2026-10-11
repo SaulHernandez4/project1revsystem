@@ -124,3 +124,55 @@ void displayAvailability(const std::vector<Resource>& resources)
                    << std::setw(15) << resources[i].getStatus() << std::endl;
     }
 }
+
+// quick sorting!
+
+void quickSort(std::vector<Resource>& resources, int field)
+{
+    if (resources.size() < 2) return;
+    quickSortHelper(resources, 0, (int)resources.size() - 1, field);
+}
+
+void quickSortHelper(std::vector<Resource>& resources, int low, int high, int field)
+{
+    if (low < high) {
+        int p = partitionResources(resources, low, high, field);
+        quickSortHelper(resources, low, p - 1, field);
+        quickSortHelper(resources, p + 1, high, field);
+    }
+}
+
+void swapResources(Resource& a, Resource& b)
+{
+    Resource temp = a;
+    a = b;
+    b = temp;
+}
+
+bool comesBefore(const Resource& a, const Resource& b, int field)
+{
+    // 1=resourceid
+    // 2=name
+    // 3=popularity
+    switch (field)
+    {
+    case 1: return a.getId() < b.getId();
+    case 2: return a.getName() < b.getName();
+    default: return a.getStatus() < b.getStatus();
+    }
+}
+
+int partitionResources(std::vector<Resource>& resources, int low, int high, int field)
+{
+    Resource pivot = resources[high];
+    int i = low - 1;
+
+    for (int j = low;j < high;j++) {
+        if (comesBefore(resources[j], pivot, field)) {
+            i++;
+            swapResources(resources[i], resources[j]);
+        }
+    }
+    swapResources(resources[i + 1], resources[high]);
+    return i+1;
+}

@@ -345,7 +345,7 @@ void ReservationManager::undoCancelledReservation(std::vector<Resource>& resourc
 
 	for (Node* n = head;n != nullptr;n = n->next) {
 		if (n->reservation.getReservationID() == reservation.getReservationID()) {
-			std::cout << "Cannot undo: reservation ID already exists." << std::endl;
+			std::cout << "Cannot undo: Reservation ID already exists." << std::endl;
 			return;
 		}
 	}
@@ -353,7 +353,7 @@ void ReservationManager::undoCancelledReservation(std::vector<Resource>& resourc
 	for (Resource& resource : resources) {
 		if (resource.getId() == reservation.getResourceID()) {
 			if (resource.getStatus() == "Unavailable") {
-				std::cout << "Cannot undo: resource is currently reserved." << std::endl;
+				std::cout << "Cannot undo: Resource is currently reserved." << std::endl;
 				return;
 			}
 			resource.setStatus("Unavailable");

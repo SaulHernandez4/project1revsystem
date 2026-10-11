@@ -107,7 +107,19 @@ int main()
                 manager.displayReservations();
                 break;
             case 7:
-                std::cout << "Sort Resources is not implemented yet." << std::endl;
+                int field;
+                std::cout << "Sort by: 1. ID  2. Name  3. Popularity" << std::endl;
+                std::cout << "Enter choice: ";
+                if (!(std::cin >> field) || field < 1 || field > 4)
+                {
+                    std::cin.clear();
+                    std::cin.ignore(1000, '\n');
+                    std::cout << "Invalid sort option." << std::endl;
+                    break;
+                }
+                quickSort(resources, field);
+                std::cout << std::endl;
+                displayResources(resources);
                 break;
             case 8:
                 manager.generateReport(resources);
