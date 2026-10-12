@@ -57,9 +57,10 @@ public:
 	void undoCancelledReservation(std::vector<Resource>& resources);
 	void displayCancelledReservations() const;
 	void generateReport(const std::vector<Resource>& resources) const;
+
+	bool searchReservationByID(int reservationID) const;
+	int searchReservationsByStudent(int userID) const;
 };
-
-
 
 
 #endif // !RESERVATIONMANAGER_H

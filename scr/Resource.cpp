@@ -176,3 +176,13 @@ int partitionResources(std::vector<Resource>& resources, int low, int high, int 
     swapResources(resources[i + 1], resources[high]);
     return i+1;
 }
+
+int searchResourceByID(const std::vector<Resource>& resources, const std::string& id)
+{
+    for (size_t i = 0; i < resources.size(); i++) {
+        if (resources[i].getId() == id) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;
+}

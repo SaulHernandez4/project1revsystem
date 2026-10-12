@@ -488,3 +488,30 @@ void ReservationManager::generateReport(const std::vector<Resource>& resources) 
 	std::cout << std::endl << "========================================" << std::endl;
 
 }
+
+bool ReservationManager::searchReservationByID(int reservationID) const {
+	Node* current = head;
+	while (current != nullptr) {
+		if (current->reservation.getReservationID() == reservationID) {
+			std::cout << "-----------------------------" << std::endl;
+			displayReservation(current->reservation);
+			return true;
+		}
+		current = current->next;
+	}
+	return false;
+}
+
+int ReservationManager::searchReservationsByStudent(int userID) const {
+	int count = 0;
+	Node* current = head;
+	while (current != nullptr) {
+		if (current->reservation.getUserID() == userID) {
+			std::cout << "-----------------------------" << std::endl;
+			displayReservation(current->reservation);
+			count++;
+		}
+		current = current->next;
+	}
+	return count;
+}

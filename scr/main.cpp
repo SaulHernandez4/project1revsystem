@@ -32,7 +32,7 @@ int main()
     std::vector<Resource> resources = loadResources(findResourcesFile());
     int choice = 0;
 
-    while (choice != 10)
+    while (choice != 11)
     {
         std::cout << std::endl;
         std::cout << "===== Campus Resource Reservation System =====" << std::endl;
@@ -45,7 +45,8 @@ int main()
         std::cout << "7. Sort Resources" << std::endl;
         std::cout << "8. Generate Report" << std::endl;
         std::cout << "9. Show Cancellation History" << std::endl;
-        std::cout << "10. Exit" << std::endl;
+        std::cout << "10. Search" << std::endl;
+        std::cout << "11. Exit" << std::endl;
         std::cout << "Enter Choice: ";
 
         if (!(std::cin >> choice))
@@ -108,7 +109,7 @@ int main()
                 break;
             case 7:
                 int field;
-                std::cout << "Sort by: 1. ID  2. Name  3. Popularity" << std::endl;
+                std::cout << "Sort by: 1. ID  2. Name  3. Availability" << std::endl;
                 std::cout << "Enter choice: ";
                 if (!(std::cin >> field) || field < 1 || field > 4)
                 {
@@ -128,6 +129,57 @@ int main()
                 manager.displayCancelledReservations();
                 break;
             case 10:
+                
+                std::cout << "\nSearch: 1. Resource by ID   2. Reservation by ID   3. Reservations by Student ID" << std::endl;
+                int type;
+                std::cout << "Enter choice: ";
+                std::cin >> type;
+                switch (type) {
+                    case 1:
+                    {
+                        std::string id;
+                        std::cout << "Enter Resource ID: ";
+                        std::cin >> id;
+                        int index = searchResourceByID(resources, id);
+                        if (index == -1) {
+                            std::cout << "Resource not found." << std::endl;
+                        }
+                        else {
+                            std::vector<Resource> found;
+                            found.push_back(resources[index]);
+                            displayResources(found);
+                        }
+                        break;
+                    }
+                    case 2:
+                    {
+                        int id;
+                        std::cout << "Enter Reservation ID: ";
+                        std::cin >> id;
+                        if (!manager.searchReservationByID(id)) {
+                            std::cout << "Reservation not found." << std::endl;
+                        }
+                        break;
+                    }
+                    case 3:
+                    {
+                        int id;
+                        std::cout << "Enter Student ID: ";
+                        std::cin >> id;
+                        if (manager.searchReservationsByStudent(id) == 0) {
+                            std::cout << "No reservations found for that student." << std::endl;
+                        }
+                        break;
+                    }
+                    default:
+                    {
+                        std::cout << "Invalid search option." << std::endl;
+                        break;
+                    }
+                }
+                break;
+
+            case 11:
                 std::cout << "Exiting program." << std::endl;
                 break;
             default:
